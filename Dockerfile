@@ -15,8 +15,11 @@ RUN groupadd nixbld && \
         useradd -m -s /bin/false -g nixbld nixbld$i; \
     done
 
-# Non-interactive Nix installation in single-user mode
-RUN sh <(curl -L https://nixos.org/nix/install) --no-daemon
+# Download and install Nix in single-user mode
+RUN curl -L https://nixos.org/nix/install -o install-nix.sh && \
+    sh install-nix.sh --no-daemon && \
+    rm install-nix.sh
+
 
 # Set working directory
 WORKDIR /app
