@@ -15,6 +15,13 @@ RUN groupadd nixbld && \
         useradd -m -s /bin/false -g nixbld nixbld$i; \
     done
 
+# Create a non-root user (we'll use 'nixuser')
+RUN useradd -m -s /bin/bash nixuser
+
+# Switch to the non-root user
+USER nixuser
+WORKDIR /home/nixuser
+
 # Download and install Nix in single-user mode
 RUN curl -L https://nixos.org/nix/install -o install-nix.sh && \
     sh install-nix.sh --no-daemon && \
