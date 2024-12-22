@@ -12,7 +12,10 @@ RUN apt-get update && \
 
 # Create the nixbld group and users
 RUN groupadd nixbld && \
-    for i in $(seq 1 10); do useradd -g nixbld nixbld$i; done
+    for i in $(seq 1 10); do \
+        useradd -m -s /bin/false -g nixbld nixbld$i; \
+    done
+
 
 # Set working directory
 WORKDIR /app
