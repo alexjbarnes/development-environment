@@ -8,7 +8,6 @@ RUN apt-get update && \
     xz-utils \
     ca-certificates && \
     rm -rf /var/lib/apt/lists/*
-   # sh <(curl -L https://nixos.org/nix/install) --daemon
 
 # Create the nixbld group and users
 RUN groupadd nixbld && \
@@ -16,6 +15,8 @@ RUN groupadd nixbld && \
         useradd -m -s /bin/false -g nixbld nixbld$i; \
     done
 
+# Non-interactive Nix installation in single-user mode
+RUN sh <(curl -L https://nixos.org/nix/install) --no-daemon
 
 # Set working directory
 WORKDIR /app
