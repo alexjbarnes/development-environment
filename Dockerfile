@@ -10,6 +10,10 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
    # sh <(curl -L https://nixos.org/nix/install) --daemon
 
+# Create the nixbld group and users
+RUN groupadd nixbld && \
+    for i in $(seq 1 10); do useradd -g nixbld nixbld$i; done
+
 # Set working directory
 WORKDIR /app
 
