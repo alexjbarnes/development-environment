@@ -8,8 +8,8 @@ RUN apt-get update && \
     xz-utils \
     ca-certificates && \
     rm -rf /var/lib/apt/lists/* && \
-    sh <(curl -L https://nixos.org/nix/install) --daemon--daemon
-
+    sh <(curl -L https://nixos.org/nix/install) --daemon
+    
 # Set working directory
 WORKDIR /app
 
