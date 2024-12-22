@@ -1,32 +1,19 @@
 FROM debian:latest
 
-# Update package lists and install basic utilities
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    curl \
-    sudo \
-    xz-utils \
-    ca-certificates && \
-    rm -rf /var/lib/apt/lists/*
+ENV USER nix
+ENV NIX_PATH /nix/var/nix/profiles/per-user/root/channels
 
-# Create the nixbld group and users
-RUN groupadd nixbld && \
-    for i in $(seq 1 10); do \
-        useradd -m -s /bin/false -g nixbld nixbld$i; \
-    done
+RUN apt-get update && apt-get install -y curl
 
-# Create a non-root user (we'll use 'nixuser')
-RUN useradd -m -s /bin/bash nixuser
+RUN adduser --disabled-password --gecos '' nix
+USER nix
+WORKDIR /home/nix
 
-# Switch to the non-root user
-USER nixuser
-WORKDIR /home/nixuser
+RUN touch .bash_profile && \
+    curl https://nixos.org/nix/install | sh
 
-# Download and install Nix in single-user mode
-RUN curl -L https://nixos.org/nix/install -o install-nix.sh && \
-    sh install-nix.sh --no-daemon && \
-    rm install-nix.sh
-
+RUN . /home/nix/.nix-profile/etc/profile.d/nix.sh && \
+    nix-env -iA nixpkgs.hello
 
 # Set working directory
 WORKDIR /app
