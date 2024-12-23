@@ -3,7 +3,7 @@ FROM debian:latest
 ENV USER nix
 ENV NIX_PATH /nix/var/nix/profiles/per-user/root/channels
 
-RUN apt-get update && apt-get install -y curl
+RUN apt-get update && apt-get install -y curl xz-utils
 
 RUN adduser --disabled-password --gecos '' nix
 USER nix
