@@ -12,8 +12,8 @@ WORKDIR /home/nix
 RUN touch .bash_profile && \
     curl https://nixos.org/nix/install | sh
 
-RUN . /home/nix/.nix-profile/etc/profile.d/nix.sh && \
-    nix-env -iA nixpkgs.hello
+# . /home/nix/.nix-profile/etc/profile.d/nix.sh && \
+   # nix-env -iA nixpkgs.hello
 
 # Set working directory
 WORKDIR /app
