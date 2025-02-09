@@ -13,8 +13,6 @@ USER root
 RUN chown -R $CONTAINER_USER: /home/linuxbrew/.linuxbrew
 ENV PATH="/home/linuxbrew/.linuxbrew/bin:${PATH}"
 RUN git config --global --add safe.directory /home/linuxbrew/.linuxbrew/Homebrew
-USER linuxbrew
-RUN brew list
 
 ## GO packages
 
