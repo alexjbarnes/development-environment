@@ -10,8 +10,15 @@ RUN useradd -m brew && echo "brew ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 USER brew
 ENV HOME /home/brew
 
-## Install Homebrew noninteractively.
-RUN NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && \
+# Set Homebrew environment variables to install under the nonroot user's home.
+ENV HOMEBREW_PREFIX="$HOME/.linuxbrew" \
+    HOMEBREW_REPOSITORY="$HOMEBREW_PREFIX/Homebrew" \
+    HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar" \
+    HOMEBREW_CACHE="$HOME/.cache/Homebrew"
+
+# Create Homebrew prefix directory and install Homebrew in noninteractive mode.
+RUN mkdir -p "$HOMEBREW_PREFIX" && \
+    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && \
     echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> $HOME/.profile && \
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" && \
     brew --version
