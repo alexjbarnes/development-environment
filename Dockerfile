@@ -16,6 +16,7 @@ ENV PATH="/home/linuxbrew/.linuxbrew/bin:${PATH}"
 RUN git config --global --add safe.directory /home/linuxbrew/.linuxbrew/Homebrew
 
 ## Brew Packages
+USER linuxbrew
 RUN brew update
 RUN brew install goenv
 
