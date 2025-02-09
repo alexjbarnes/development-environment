@@ -8,7 +8,7 @@ RUN useradd -m -s /bin/bash nonroot
 
 ## Install Homebrew 
 USER nonroot
-WORKDIR /home/brew
+WORKDIR /home/nonroot/
 RUN NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 RUN brew list
 ## GO packages
