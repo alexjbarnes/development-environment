@@ -1,7 +1,7 @@
 FROM debian:latest
 
 ## Apt packages
-RUN apt-get update && apt-get install -y curl git
+RUN apt-get update && apt-get install -y curl git build-essential
 
 ## Install Homebrew
 RUN useradd -m -s /bin/zsh linuxbrew && \
