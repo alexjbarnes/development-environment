@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y curl git
 RUN useradd -m -s /bin/bash nonroot
 
 ## Install Homebrew 
-RUN USER nonroot
+USER nonroot
 RUN NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 RUN brew list
 ## GO packages
