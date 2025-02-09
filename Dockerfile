@@ -3,6 +3,7 @@ FROM debian:latest
 ## Apt packages
 RUN apt-get update && apt-get install -y curl git
 
+## Install Homebrew
 RUN useradd -m -s /bin/zsh linuxbrew && \
     usermod -aG sudo linuxbrew &&  \
     mkdir -p /home/linuxbrew/.linuxbrew && \
@@ -13,6 +14,10 @@ USER root
 RUN chown -R $CONTAINER_USER: /home/linuxbrew/.linuxbrew
 ENV PATH="/home/linuxbrew/.linuxbrew/bin:${PATH}"
 RUN git config --global --add safe.directory /home/linuxbrew/.linuxbrew/Homebrew
+
+## Brew Packages
+RUN brew update
+RUN brew install goenv
 
 ## GO packages
 
