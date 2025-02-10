@@ -23,7 +23,8 @@ RUN brew install \
     ripgrep \
     television \
     jesseduffield/lazygit/lazygit \
-    btop
+    btop \
+    knqyf263/pet/pet
 
 USER root
 ## Install Go
