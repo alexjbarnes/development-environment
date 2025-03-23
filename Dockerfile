@@ -27,7 +27,8 @@ RUN brew install \
     knqyf263/pet/pet \
     opentofu \
     lla \
-    tlrc
+    tlrc \
+    nvim
 
 USER root
 ## Install Go
