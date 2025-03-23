@@ -25,7 +25,8 @@ RUN brew install \
     jesseduffield/lazygit/lazygit \
     btop \
     knqyf263/pet/pet \
-    opentofu
+    opentofu \
+    lla
 
 USER root
 ## Install Go
