@@ -26,7 +26,8 @@ RUN brew install \
     btop \
     knqyf263/pet/pet \
     opentofu \
-    lla
+    lla \
+    tlrc
 
 USER root
 ## Install Go
