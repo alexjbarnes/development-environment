@@ -24,11 +24,12 @@ RUN brew install \
     television \
     jesseduffield/lazygit/lazygit \
     btop \
-    knqyf263/pet/pet
+    knqyf263/pet/pet \
+    opentofu
 
 USER root
 ## Install Go
-RUN goenv install 1.23.6 && goenv global 1.23.6
+RUN goenv install 1.24.1 && goenv global 1.24.1
 
 ## Go packages
 
