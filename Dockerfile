@@ -42,7 +42,11 @@ RUN goenv install 1.24.1 && goenv global 1.24.1
 ## Rust packages
 
 # Set working directory
-WORKDIR /app
+WORKDIR /root
+
+## Initialise nvim/lazy vim
+RUN nvim --headless -c "Lazy! sync" -c "qa"
+
 
 # Command to run when container starts
 CMD ["bash"]
