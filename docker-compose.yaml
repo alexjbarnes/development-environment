@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  dev-environment:
+    image: ghcr.io/alexjbarnes/development-environment:latest
+    stdin_open: true  # equivalent to -i flag
+    tty: true         # equivalent to -t flag
+    command: /bin/bash
