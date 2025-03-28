@@ -1,5 +1,7 @@
 FROM debian:latest
 
+COPY config/ /root/.config/
+
 ## Apt packages
 RUN apt-get update && apt-get install -y curl git build-essential locales
 
@@ -28,7 +30,8 @@ RUN brew install \
     opentofu \
     lla \
     tlrc \
-    nvim
+    nvim \
+    fd
 
 USER root
 ## Install Go
