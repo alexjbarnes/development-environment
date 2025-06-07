@@ -1,1 +1,2 @@
-alias ls="command lla"
+alias ls="lla"
+alias grep="rg"
