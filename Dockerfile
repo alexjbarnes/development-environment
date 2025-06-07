@@ -31,7 +31,8 @@ RUN brew install \
     lla \
     tlrc \
     nvim \
-    fd
+    fd \
+    fish
 
 USER root
 ## Install Go
