@@ -41,6 +41,8 @@ USER root
 
 SHELL ["/home/linuxbrew/.linuxbrew/bin/fish", "-c"]
 
+RUN lla theme pull
+
 ENV SHELL=fish
 
 RUN pnpm setup
@@ -59,7 +61,7 @@ RUN goenv install 1.24.1 && goenv global 1.24.1
 WORKDIR /root
 
 COPY config/ /root/.config/
-COPY nvim/mason/ /root/.local/share/nvim/mason/
+##COPY nvim/mason/ /root/.local/share/nvim/mason/
 ## Initialise nvim/lazy vim
 RUN nvim --headless -c "Lazy! sync" -c "Lazy update" -c "qa"
 
