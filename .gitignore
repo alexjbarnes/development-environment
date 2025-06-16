@@ -22,3 +22,7 @@ go.work
 
 .obsidian/
 .trash/
+
+.env
+
+config/Cody-nodejs/

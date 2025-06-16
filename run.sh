@@ -1,1 +1,1 @@
-docker run --env-file .env --privileged -v /proc:/proc -v /sys:/sys -v ~/repos:/root/repos -v /root/.local/share/fish/fish_history:/root/.local/share/fish/fish_history -it ghcr.io/alexjbarnes/development-environment:latest fish
+docker run --env-file .env --privileged -v /proc:/proc -v /sys:/sys -v ~/repos:/root/repos -v /root/.local/share/fish/fish_history:/root/.local/share/fish/fish_history -v /var/run/docker.sock:/var/run/docker.sock -it ghcr.io/alexjbarnes/development-environment:latest fish
