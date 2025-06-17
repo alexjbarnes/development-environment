@@ -5,6 +5,7 @@ docker run \
   --privileged \
   -v /proc:/proc \
   -v /sys:/sys \
+  -v ~/.ssh/:/root/.ssh/ \
   -v ~/repos:/root/repos \
   -v /root/.local/share/fish/:/root/.local/share/fish/ \
   -v ~/repos/development-environment/config:/root/.config \
