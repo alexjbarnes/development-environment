@@ -29,3 +29,4 @@ config/Cody-nodejs/
 config/go
 nvim/
 config/lla/themes/
+config/nvim/lazy-lock.json
