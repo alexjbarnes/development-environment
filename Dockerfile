@@ -20,10 +20,35 @@ RUN git config --global --add safe.directory /home/linuxbrew/.linuxbrew/Homebrew
 ## Brew Packages
 USER linuxbrew
 RUN brew update
+
+# Install all package managers first
 RUN brew install \
   node \
   pnpm \
   goenv \
+  fish
+
+USER root
+
+RUN goenv install 1.24.1 && goenv global 1.24.1
+
+RUN  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
+SHELL ["/home/linuxbrew/.linuxbrew/bin/fish", "-c"]
+
+ENV SHELL=fish
+
+RUN pnpm setup
+
+## Install Cody cli
+RUN pnpm install -g @sourcegraph/cody
+
+## Go packages
+
+## Rust packages
+
+## Brew Packages
+RUN brew install \
   ripgrep \
   television \
   jesseduffield/lazygit/lazygit \
@@ -34,36 +59,12 @@ RUN brew install \
   tlrc \
   nvim \
   fd \
-  fish \
   docker
 
-USER root
-
-SHELL ["/home/linuxbrew/.linuxbrew/bin/fish", "-c"]
-
-RUN lla theme pull
-
-ENV SHELL=fish
-
-RUN pnpm setup
-
-## Install Cody cli
-RUN pnpm install -g @sourcegraph/cody
-
-## Install Go
-RUN goenv install 1.24.1 && goenv global 1.24.1
-
-## Go packages
-
-## Rust packages
-
-# Set working directory
 WORKDIR /root
 
 COPY config/ /root/.config/
-##COPY nvim/mason/ /root/.local/share/nvim/mason/
-## Initialise nvim/lazy vim
-RUN nvim --headless -c "Lazy! sync" -c "Lazy update" -c "qa"
 
-# Command to run when container starts
+RUN lla theme pull
+
 CMD ["fish"]
