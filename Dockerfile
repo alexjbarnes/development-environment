@@ -48,6 +48,7 @@ RUN pnpm install -g @sourcegraph/cody
 ## Rust packages
 
 ## Brew Packages
+USER linuxbrew
 RUN brew install \
   ripgrep \
   television \
@@ -60,6 +61,8 @@ RUN brew install \
   nvim \
   fd \
   docker
+
+USER root
 
 WORKDIR /root
 
