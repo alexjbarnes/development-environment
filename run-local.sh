@@ -12,4 +12,6 @@ docker run \
   -v ~/repos/development-environment/config:/root/.config \
   -v ~/.gitconfig:/root/.gitconfig \
   -v /var/run/docker.sock:/var/run/docker.sock \
+  -v ~/.claude/:/root/.claude/ \
+  -v ~/.claude.json:/root/.claude.json \
   -it ghcr.io/alexjbarnes/development-environment:latest fish
