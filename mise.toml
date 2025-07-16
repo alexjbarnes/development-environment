@@ -1,0 +1,17 @@
+# mise.toml
+[tools]
+neovim = "latest"
+node = "latest"
+pnpm = "latest"
+ripgrep = "latest"
+btop = "latest"
+fd = "latest"
+docker-cli = "latest"
+just = "latest"
+go = "1.24.5"
+python = "latest"
+rust = "latest"
+opentofu = "latest"
+television = "latest"
+gemini-cli = "latest"
+claude = "latest"

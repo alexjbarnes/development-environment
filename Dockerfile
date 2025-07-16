@@ -1,83 +1,67 @@
 FROM debian:bookworm-slim
+ARG GITHUB_TOKEN
+ENV GITHUB_TOKEN=$GITHUB_TOKEN
 
+# Set timezone first
 RUN ln -snf /usr/share/zoneinfo/Europe/London /etc/localtime && echo Europe/London > /etc/timezone
 
-## Apt packages
+# Install system packages as root (install sudo first)
 RUN apt-get update && \
-  apt-get install -y --no-install-recommends curl git build-essential locales ca-certificates sudo && \
-  apt-get clean && \
-  rm -rf /var/lib/apt/lists/*
+    apt-get install -y --no-install-recommends sudo && \
+    apt-get install -y --no-install-recommends gnupg curl git build-essential locales ca-certificates openssh-client net-tools fish && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-## Install Homebrew
-RUN useradd -m -s /bin/bash linuxbrew && \
-  usermod -aG sudo linuxbrew &&  \
-  mkdir -p /home/linuxbrew/.linuxbrew && \
-  chown -R linuxbrew: /home/linuxbrew/.linuxbrew
-USER linuxbrew
-RUN /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-ENV PATH="/home/linuxbrew/.linuxbrew/bin:${PATH}"
-USER root
-RUN chown -R linuxbrew: /home/linuxbrew/.linuxbrew
-RUN git config --global --add safe.directory /home/linuxbrew/.linuxbrew/Homebrew
+# Create dev user and give sudo access (for system-level changes only)
+RUN useradd -m -u 1000 -s /usr/bin/fish dev && \
+    usermod -aG sudo dev && \
+    echo "dev ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/dev && \
+    chmod 0440 /etc/sudoers.d/dev && \
+    addgroup --gid 1001 devcontainer && \
+    adduser dev devcontainer
 
-## Brew Packages
-USER linuxbrew
-RUN env PATH="/home/linuxbrew/.linuxbrew/bin:$PATH" brew update
+# Switch to dev user for ALL development tool installations
+USER dev
+WORKDIR /home/dev
 
-# Install all package managers first
-RUN env PATH="/home/linuxbrew/.linuxbrew/bin:$PATH" brew install \
-  node \
-  pnpm \
-  goenv \
-  fish
+# Install Mise for dev user (not system-wide)
+ENV MISE_DATA_DIR="/home/dev/.local/share/mise"
+ENV MISE_CONFIG_DIR="/home/dev/.config/mise"
+ENV MISE_CACHE_DIR="/home/dev/.cache/mise"
+ENV MISE_INSTALL_PATH="/home/dev/.local/bin/mise"
 
-USER root
+RUN curl https://mise.run | sh
 
-RUN env PATH="/home/linuxbrew/.linuxbrew/bin:$PATH" goenv install 1.24.1 && env PATH="/home/linuxbrew/.linuxbrew/bin:$PATH" goenv global 1.24.1
-ENV PATH="/home/linuxbrew/.linuxbrew/bin:/root/.goenv/bin:/root/.goenv/shims:${PATH}"
-RUN GOPATH_DIR=$(go env GOPATH) && echo "export PATH=\$PATH:${GOPATH_DIR}/bin" >> /root/.bashrc
-RUN /home/linuxbrew/.linuxbrew/bin/fish -c "set -Ux PATH \$PATH (go env GOPATH)/bin"
-RUN echo "set -gx PATH \$PATH (go env GOPATH)/bin" >> /root/.config/fish/config.fish
+# Setup PATH for the session
+ENV PATH="/home/dev/.local/share/mise/shims:/home/dev/.local/bin:$PATH"
 
-RUN  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+# Create fish config directory and setup environment
+RUN mkdir -p /home/dev/.config/fish && \
+    echo 'set -gx PATH "/home/dev/.local/share/mise/shims" "/home/dev/.local/bin" "/home/dev/.cargo/bin" $PATH' > /home/dev/.config/fish/config.fish && \
+    echo 'set -gx MISE_DATA_DIR "/home/dev/.local/share/mise"' >> /home/dev/.config/fish/config.fish && \
+    echo 'set -gx MISE_CONFIG_DIR "/home/dev/.config/mise"' >> /home/dev/.config/fish/config.fish && \
+    echo 'set -gx MISE_CACHE_DIR "/home/dev/.cache/mise"' >> /home/dev/.config/fish/config.fish
 
-SHELL ["/home/linuxbrew/.linuxbrew/bin/fish", "-c"]
+# Install development tools via mise
+COPY --chown=dev:dev mise.toml .
+RUN /home/dev/.local/bin/mise trust mise.toml && /home/dev/.local/bin/mise install
 
+# Install Go packages using mise exec to ensure proper environment
+RUN /home/dev/.local/bin/mise exec -- go install github.com/a-h/templ/cmd/templ@latest && \
+    /home/dev/.local/bin/mise exec -- go install mvdan.cc/gofumpt@latest && \
+    /home/dev/.local/bin/mise exec -- go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest && \
+    /home/dev/.local/bin/mise exec -- go install github.com/air-verse/air@latest && \
+    /home/dev/.local/bin/mise exec -- go install golang.org/x/vuln/cmd/govulncheck@latest && \
+    /home/dev/.local/bin/mise exec -- go install go.uber.org/mock/mockgen@latest && \
+    /home/dev/.local/bin/mise exec -- go install honnef.co/go/tools/cmd/staticcheck@latest
+
+# Install Rust packages as dev user
+RUN cargo install lla && cargo install tlrc@1.11.0
+
+# Initialize fish to prevent universal variables permission issues
+RUN fish -c "set -U fish_greeting ''" || true
+
+# Set shell and ensure proper environment
 ENV SHELL=fish
-
-RUN pnpm setup
-
-RUN pnpm install -g @google/gemini-cli
-RUN pnpm install -g @anthropic-ai/claude-code
-## Go packages
-RUN go install github.com/a-h/templ/cmd/templ@latest
-
-## Rust packages
-
-## Brew Packages
-USER linuxbrew
-RUN env PATH="/home/linuxbrew/.linuxbrew/bin:$PATH" brew install \
-  ripgrep \
-  television \
-  jesseduffield/lazygit/lazygit \
-  btop \
-  knqyf263/pet/pet \
-  opentofu \
-  lla \
-  tlrc \
-  nvim \
-  fd \
-  docker \
-  just
-
-USER root
-
-WORKDIR /root
-
-COPY config/ /root/.config/
-
-RUN lla theme pull
-
-# Note: GOPATH/bin is added to PATH in config/fish/config.fish (mounted from host)
 
 CMD ["fish"]
