@@ -1,3 +1,5 @@
+#!/bin/bash
+
 cd "$(dirname "$(readlink -f "$0")")"
 
 # Fixed container name for persistence
@@ -12,13 +14,11 @@ if [ -n "$CONTAINER_EXISTS" ]; then
   CONTAINER_RUNNING=$(docker ps --filter "name=^${CONTAINER_NAME}$" --format "{{.Names}}" | head -n1)
   
   if [ -n "$CONTAINER_RUNNING" ]; then
-    echo "Container is running. Executing into it..."
-    docker exec -it "$CONTAINER_NAME" fish
+    echo "Container is already running."
   else
     echo "Container exists but is stopped. Starting it..."
     docker start "$CONTAINER_NAME"
-    echo "Container started. Executing into it..."
-    docker exec -it "$CONTAINER_NAME" fish
+    echo "Container started successfully."
   fi
 else
   echo "Creating new persistent container..."
@@ -42,8 +42,11 @@ else
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v ~/.claude/:/home/dev/.claude/ \
     -v ~/.claude.json:/home/dev/.claude.json \
-    -d "$IMAGE_NAME" fish -c "while true; do sleep 3600; done"
+    -d "$IMAGE_NAME" sleep infinity
   
-  echo "Container created and running in background. Executing into it..."
-  docker exec -it "$CONTAINER_NAME" fish
+  echo "Container created and running in background."
 fi
+
+# Show container status
+echo "Container status:"
+docker ps --filter "name=^${CONTAINER_NAME}$" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
