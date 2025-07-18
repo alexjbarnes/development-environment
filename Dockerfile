@@ -8,7 +8,7 @@ RUN ln -snf /usr/share/zoneinfo/Europe/London /etc/localtime && echo Europe/Lond
 # Install system packages as root (install sudo first)
 RUN apt-get update && \
     apt-get install -y --no-install-recommends sudo && \
-    apt-get install -y --no-install-recommends gnupg curl git build-essential locales ca-certificates openssh-client net-tools fish && \
+    apt-get install -y --no-install-recommends gnupg curl git build-essential locales ca-certificates openssh-client net-tools fish unzip && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -33,11 +33,11 @@ ENV MISE_INSTALL_PATH="/home/dev/.local/bin/mise"
 RUN curl https://mise.run | sh
 
 # Setup PATH for the session
-ENV PATH="/home/dev/.local/share/mise/shims:/home/dev/.local/bin:$PATH"
+ENV PATH="/home/dev/.local/share/mise/shims:/home/dev/.local/bin:/home/dev/.local/share/pnpm:$PATH"
 
 # Create fish config directory and setup environment
 RUN mkdir -p /home/dev/.config/fish && \
-    echo 'set -gx PATH "/home/dev/.local/share/mise/shims" "/home/dev/.local/bin" "/home/dev/.cargo/bin" $PATH' > /home/dev/.config/fish/config.fish && \
+    echo 'set -gx PATH "/home/dev/.local/share/mise/shims" "/home/dev/.local/bin" "/home/dev/.local/share/pnpm" "/home/dev/.cargo/bin" $PATH' > /home/dev/.config/fish/config.fish && \
     echo 'set -gx MISE_DATA_DIR "/home/dev/.local/share/mise"' >> /home/dev/.config/fish/config.fish && \
     echo 'set -gx MISE_CONFIG_DIR "/home/dev/.config/mise"' >> /home/dev/.config/fish/config.fish && \
     echo 'set -gx MISE_CACHE_DIR "/home/dev/.cache/mise"' >> /home/dev/.config/fish/config.fish
@@ -58,10 +58,14 @@ RUN /home/dev/.local/bin/mise exec -- go install github.com/a-h/templ/cmd/templ@
 # Install Rust packages as dev user
 RUN cargo install lla && cargo install tlrc@1.11.0
 
+# Install ai tools
+ENV SHELL=/bin/bash
+RUN /home/dev/.local/bin/mise exec -- pnpm setup && \
+    PNPM_HOME="/home/dev/.local/share/pnpm" PATH="/home/dev/.local/share/pnpm:$PATH" /home/dev/.local/bin/mise exec -- pnpm install -g vibe-kanban
+
 # Initialize fish to prevent universal variables permission issues
 RUN fish -c "set -U fish_greeting ''" || true
 
 # Set shell and ensure proper environment
-ENV SHELL=fish
 
 CMD ["fish"]

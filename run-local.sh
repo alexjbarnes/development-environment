@@ -17,6 +17,10 @@ else
     --restart always \
     --env-file .env \
     --network host \
+    --privileged \
+    --pid host \
+    --group-add 1001 \
+    --group-add 102 \
     -v /proc:/proc \
     -v /sys:/sys \
     -v ~/.ssh/:/home/dev/.ssh/ \
