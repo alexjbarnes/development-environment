@@ -37,14 +37,22 @@ else
     -v ~/repos:/home/dev/repos \
     -v ~/.local/share/fish/:/home/dev/.local/share/fish/ \
     -v ~/.local/share/nvim/:/home/dev/.local/share/nvim/ \
-    -v ~/repos/development-environment/config:/home/dev/.config \
+    -v ~/repos/development-environment/config/git:/home/dev/.config/git \
+    -v ~/repos/development-environment/config/lla:/home/dev/.config/lla \
+    -v ~/repos/development-environment/config/nvim:/home/dev/.config/nvim \
     -v ~/.gitconfig:/home/dev/.gitconfig \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v ~/.claude/:/home/dev/.claude/ \
     -v ~/.claude.json:/home/dev/.claude.json \
+    -v ~/.local/share/vibe-kanban:/home/dev/.local/share/vibe-kanban \
+    -v ~/repos/development-environment/config/claude-code-ui/auth.db:/home/dev/claudecodeui/server/database/auth.db \
     -d "$IMAGE_NAME" sleep infinity
   
   echo "Container created and running in background."
+  
+# Start AI tools
+  echo "Starting AI tools..."
+  docker exec "$CONTAINER_NAME" bash -c "cd /home/dev/repos/development-environment && ./start-ai-tools.sh"
 fi
 
 # Show container status

@@ -24,6 +24,8 @@ RUN useradd -m -u 1000 -s /usr/bin/fish dev && \
 USER dev
 WORKDIR /home/dev
 
+COPY --chown=dev:dev config/fish/config.fish /home/dev/.config/fish/config.fish
+
 # Install Mise for dev user (not system-wide)
 ENV MISE_DATA_DIR="/home/dev/.local/share/mise"
 ENV MISE_CONFIG_DIR="/home/dev/.config/mise"
@@ -36,15 +38,40 @@ RUN curl https://mise.run | sh
 ENV PATH="/home/dev/.local/share/mise/shims:/home/dev/.local/bin:/home/dev/.local/share/pnpm:$PATH"
 
 # Create fish config directory and setup environment
-RUN mkdir -p /home/dev/.config/fish && \
-    echo 'set -gx PATH "/home/dev/.local/share/mise/shims" "/home/dev/.local/bin" "/home/dev/.local/share/pnpm" "/home/dev/.cargo/bin" $PATH' > /home/dev/.config/fish/config.fish && \
+RUN echo 'set -gx PATH "/home/dev/.local/share/mise/shims" "/home/dev/.local/bin" "/home/dev/.local/share/pnpm" "/home/dev/.cargo/bin" $PATH' >> /home/dev/.config/fish/config.fish && \
     echo 'set -gx MISE_DATA_DIR "/home/dev/.local/share/mise"' >> /home/dev/.config/fish/config.fish && \
     echo 'set -gx MISE_CONFIG_DIR "/home/dev/.config/mise"' >> /home/dev/.config/fish/config.fish && \
-    echo 'set -gx MISE_CACHE_DIR "/home/dev/.cache/mise"' >> /home/dev/.config/fish/config.fish
+    echo 'set -gx MISE_CACHE_DIR "/home/dev/.cache/mise"' >> /home/dev/.config/fish/config.fish && \
+    echo '/home/dev/.local/bin/mise activate fish | source' >> /home/dev/.config/fish/config.fish
+
+# Configure mise to trust all config files by default
+RUN /home/dev/.local/bin/mise settings set trusted_config_paths '**'
+
+# Setup mise activation for bash/sh as well (for scripts)
+RUN echo 'export PATH="/home/dev/.local/share/mise/shims:$PATH"' >> /home/dev/.bashrc && \
+    echo 'eval "$(/home/dev/.local/bin/mise activate bash)"' >> /home/dev/.bashrc
 
 # Install development tools via mise
-COPY --chown=dev:dev mise.toml .
-RUN /home/dev/.local/bin/mise trust mise.toml && /home/dev/.local/bin/mise install
+COPY --chown=dev:dev mise.toml /home/dev/.config/mise/config.toml
+RUN /home/dev/.local/bin/mise trust /home/dev/.config/mise/config.toml && \
+    /home/dev/.local/bin/mise install && \
+    /home/dev/.local/bin/mise use -g \
+    neovim@latest \
+    node@latest \
+    pnpm@latest \
+    ripgrep@latest \
+    btop@latest \
+    fd@latest \
+    docker-cli@latest \
+    just@latest \
+    go@1.24.5 \
+    python@latest \
+    rust@latest \
+    opentofu@latest \
+    television@latest \
+    gemini-cli@latest \
+    claude@latest && \
+    /home/dev/.local/bin/mise reshim
 
 # Install Go packages using mise exec to ensure proper environment
 RUN /home/dev/.local/bin/mise exec -- go install github.com/a-h/templ/cmd/templ@latest && \
@@ -62,6 +89,12 @@ RUN cargo install lla && cargo install tlrc@1.11.0
 ENV SHELL=/bin/bash
 RUN /home/dev/.local/bin/mise exec -- pnpm setup && \
     PNPM_HOME="/home/dev/.local/share/pnpm" PATH="/home/dev/.local/share/pnpm:$PATH" /home/dev/.local/bin/mise exec -- pnpm install -g vibe-kanban
+
+# Clone and install claudecodeui dependencies (skip build, run in dev mode)
+RUN git clone https://github.com/siteboon/claudecodeui.git /home/dev/claudecodeui && \
+    cd /home/dev/claudecodeui && \
+    /home/dev/.local/bin/mise install && \
+    npm install
 
 # Initialize fish to prevent universal variables permission issues
 RUN fish -c "set -U fish_greeting ''" || true

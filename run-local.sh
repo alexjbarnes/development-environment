@@ -21,29 +21,5 @@ if [ -n "$CONTAINER_EXISTS" ]; then
     docker exec -it "$CONTAINER_NAME" fish
   fi
 else
-  echo "Creating new persistent container..."
-  docker run \
-    --name "$CONTAINER_NAME" \
-    --restart always \
-    --env-file .env \
-    --network host \
-    --privileged \
-    --pid host \
-    --group-add 1001 \
-    --group-add 102 \
-    -v /proc:/proc \
-    -v /sys:/sys \
-    -v ~/.ssh/:/home/dev/.ssh/ \
-    -v ~/repos:/home/dev/repos \
-    -v ~/.local/share/fish/:/home/dev/.local/share/fish/ \
-    -v ~/.local/share/nvim/:/home/dev/.local/share/nvim/ \
-    -v ~/repos/development-environment/config:/home/dev/.config \
-    -v ~/.gitconfig:/home/dev/.gitconfig \
-    -v /var/run/docker.sock:/var/run/docker.sock \
-    -v ~/.claude/:/home/dev/.claude/ \
-    -v ~/.claude.json:/home/dev/.claude.json \
-    -d "$IMAGE_NAME" fish -c "while true; do sleep 3600; done"
-  
-  echo "Container created and running in background. Executing into it..."
-  docker exec -it "$CONTAINER_NAME" fish
+  echo "Container not running"
 fi
