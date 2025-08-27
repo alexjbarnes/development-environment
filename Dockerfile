@@ -83,18 +83,14 @@ RUN /home/dev/.local/bin/mise exec -- go install github.com/a-h/templ/cmd/templ@
     /home/dev/.local/bin/mise exec -- go install honnef.co/go/tools/cmd/staticcheck@latest
 
 # Install Rust packages as dev user
-RUN cargo install lla && cargo install tlrc@1.11.0
+RUN cargo install lla && \
+cargo install tlrc@1.11.0 && \
+cargo install somo 
 
 # Install ai tools
 ENV SHELL=/bin/bash
 RUN /home/dev/.local/bin/mise exec -- pnpm setup && \
     PNPM_HOME="/home/dev/.local/share/pnpm" PATH="/home/dev/.local/share/pnpm:$PATH" /home/dev/.local/bin/mise exec -- pnpm install -g vibe-kanban
-
-# Clone and install claudecodeui dependencies (skip build, run in dev mode)
-RUN git clone https://github.com/siteboon/claudecodeui.git /home/dev/claudecodeui && \
-    cd /home/dev/claudecodeui && \
-    /home/dev/.local/bin/mise install && \
-    npm install
 
 # Initialize fish to prevent universal variables permission issues
 RUN fish -c "set -U fish_greeting ''" || true

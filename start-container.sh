@@ -33,7 +33,7 @@ else
     --group-add 102 \
     -v /proc:/proc \
     -v /sys:/sys \
-    -v ~/.ssh/:/home/dev/.ssh/ \
+    -v /home/dev/.ssh/:/home/dev/.ssh/ \
     -v ~/repos:/home/dev/repos \
     -v ~/.local/share/fish/:/home/dev/.local/share/fish/ \
     -v ~/.local/share/nvim/:/home/dev/.local/share/nvim/ \
