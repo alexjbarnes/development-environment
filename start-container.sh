@@ -37,6 +37,7 @@ else
     -v ~/repos:/home/dev/repos \
     -v ~/.local/share/fish/:/home/dev/.local/share/fish/ \
     -v ~/.local/share/nvim/:/home/dev/.local/share/nvim/ \
+    -v ~/.local/state/mise:/home/dev/.local/state/mise \
     -v ~/repos/development-environment/config/git:/home/dev/.config/git \
     -v ~/repos/development-environment/config/lla:/home/dev/.config/lla \
     -v ~/repos/development-environment/config/nvim:/home/dev/.config/nvim \

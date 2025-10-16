@@ -1,7 +1,7 @@
 # mise.toml
 [tools]
 neovim = "latest"
-node = "24.10.0" #pinned due to claude issues on 25
+node = "24.10.0"
 pnpm = "latest"
 ripgrep = "latest"
 btop = "latest"

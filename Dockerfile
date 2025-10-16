@@ -57,7 +57,7 @@ RUN /home/dev/.local/bin/mise trust /home/dev/.config/mise/config.toml && \
     /home/dev/.local/bin/mise install && \
     /home/dev/.local/bin/mise use -g \
     neovim@latest \
-    node@latest \
+    node@24.10.0 \
     pnpm@latest \
     ripgrep@latest \
     btop@latest \
