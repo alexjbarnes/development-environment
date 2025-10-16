@@ -9,9 +9,10 @@ CONTAINER_NAME="development-environment"
 CONTAINER_EXISTS=$(docker ps -a --filter "name=^${CONTAINER_NAME}$" --format "{{.Names}}" | head -n1)
 
 if [ -n "$CONTAINER_EXISTS" ]; then
-  echo "Stopping container..."
+  echo "Stopping and removing container..."
   docker stop "$CONTAINER_NAME"
-  echo "Container stopped successfully."
+  docker rm "$CONTAINER_NAME"
+  echo "Container stopped and removed successfully."
 else
   echo "Container does not exist."
 fi

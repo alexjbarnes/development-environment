@@ -40,11 +40,16 @@ else
     -v ~/repos/development-environment/config/git:/home/dev/.config/git \
     -v ~/repos/development-environment/config/lla:/home/dev/.config/lla \
     -v ~/repos/development-environment/config/nvim:/home/dev/.config/nvim \
+    -v ~/.config/k9s:/home/dev/.config/k9s \
+    -v ~/.config/opencode:/home/dev/.config/opencode \
+    -v ~/.kube:/home/dev/.kube \
     -v ~/.gitconfig:/home/dev/.gitconfig \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v ~/.claude/:/home/dev/.claude/ \
     -v ~/.claude.json:/home/dev/.claude.json \
     -v ~/.local/share/vibe-kanban:/home/dev/.local/share/vibe-kanban \
+    -v ~/.local/share/k9s/:/home/dev/.local/share/k9s/ \
+    -v ~/.local/share/opencode/:/home/dev/.local/share/opencode/ \
     -v ~/repos/development-environment/config/claude-code-ui/auth.db:/home/dev/claudecodeui/server/database/auth.db \
     -d "$IMAGE_NAME" sleep infinity
   

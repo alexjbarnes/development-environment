@@ -1,0 +1,5 @@
+[tools]
+claude = "latest"
+go = "1.24.5"
+just = "1.42.0"
+neovim = "latest"

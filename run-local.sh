@@ -13,12 +13,12 @@ if [ -n "$CONTAINER_EXISTS" ]; then
   
   if [ -n "$CONTAINER_RUNNING" ]; then
     echo "Container is running. Executing into it..."
-    docker exec -it "$CONTAINER_NAME" fish
+    docker exec -it -w /home/dev/repos "$CONTAINER_NAME" fish
   else
     echo "Container exists but is stopped. Starting it..."
     docker start "$CONTAINER_NAME"
     echo "Container started. Executing into it..."
-    docker exec -it "$CONTAINER_NAME" fish
+    docker exec -it -w /home/dev/repos "$CONTAINER_NAME" fish
   fi
 else
   echo "Container not running"

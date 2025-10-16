@@ -70,7 +70,10 @@ RUN /home/dev/.local/bin/mise trust /home/dev/.config/mise/config.toml && \
     opentofu@latest \
     television@latest \
     gemini-cli@latest \
-    claude@latest && \
+    claude@latest \
+    k9s@latest \
+    kubectl@latest \
+    opencode@latest && \
     /home/dev/.local/bin/mise reshim
 
 # Install Go packages using mise exec to ensure proper environment
