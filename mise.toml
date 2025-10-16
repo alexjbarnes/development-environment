@@ -1,14 +1,14 @@
 # mise.toml
 [tools]
 neovim = "latest"
-node = "latest"
+node = "24.10.0" #pinned due to claude issues on 25
 pnpm = "latest"
 ripgrep = "latest"
 btop = "latest"
 fd = "latest"
 docker-cli = "latest"
 just = "latest"
-go = "1.24.5"
+go = "1.25.3"
 python = "latest"
 rust = "latest"
 opentofu = "latest"

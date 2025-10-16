@@ -64,7 +64,7 @@ RUN /home/dev/.local/bin/mise trust /home/dev/.config/mise/config.toml && \
     fd@latest \
     docker-cli@latest \
     just@latest \
-    go@1.24.5 \
+    go@1.25.3 \
     python@latest \
     rust@latest \
     opentofu@latest \
@@ -88,7 +88,8 @@ RUN /home/dev/.local/bin/mise exec -- go install github.com/a-h/templ/cmd/templ@
 # Install Rust packages as dev user
 RUN cargo install lla && \
 cargo install tlrc@1.11.0 && \
-cargo install somo 
+cargo install somo && \
+cargo install mergiraf
 
 # Install ai tools
 ENV SHELL=/bin/bash
