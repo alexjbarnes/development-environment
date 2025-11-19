@@ -41,6 +41,7 @@ else
     -v ~/repos/development-environment/config/git:/home/dev/.config/git \
     -v ~/repos/development-environment/config/lla:/home/dev/.config/lla \
     -v ~/repos/development-environment/config/nvim:/home/dev/.config/nvim \
+    -v ~/repos/development-environment/config/starship.toml:/home/dev/.config/starship.toml \
     -v ~/.config/k9s:/home/dev/.config/k9s \
     -v ~/.config/opencode:/home/dev/.config/opencode \
     -v ~/.kube:/home/dev/.kube \

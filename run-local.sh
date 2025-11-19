@@ -21,5 +21,8 @@ if [ -n "$CONTAINER_EXISTS" ]; then
     docker exec -it -w /home/dev/repos "$CONTAINER_NAME" fish
   fi
 else
-  echo "Container not running"
+  echo "Container doesn't exist. Starting it..."
+  ./start-container.sh
+  echo "Executing into container..."
+  docker exec -it -w /home/dev/repos "$CONTAINER_NAME" fish
 fi

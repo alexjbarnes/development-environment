@@ -7,7 +7,7 @@ RUN ln -snf /usr/share/zoneinfo/Europe/London /etc/localtime && echo Europe/Lond
 # Install system packages as root (install sudo first)
 RUN apt-get update && \
     apt-get install -y --no-install-recommends sudo && \
-    apt-get install -y --no-install-recommends gnupg curl git build-essential locales ca-certificates openssh-client net-tools fish unzip && \
+    apt-get install -y --no-install-recommends gnupg curl wget git build-essential locales ca-certificates openssh-client net-tools fish unzip && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -41,7 +41,8 @@ RUN echo 'set -gx PATH "/home/dev/.local/share/mise/shims" "/home/dev/.local/bin
     echo 'set -gx MISE_DATA_DIR "/home/dev/.local/share/mise"' >> /home/dev/.config/fish/config.fish && \
     echo 'set -gx MISE_CONFIG_DIR "/home/dev/.config/mise"' >> /home/dev/.config/fish/config.fish && \
     echo 'set -gx MISE_CACHE_DIR "/home/dev/.cache/mise"' >> /home/dev/.config/fish/config.fish && \
-    echo '/home/dev/.local/bin/mise activate fish | source' >> /home/dev/.config/fish/config.fish
+    echo '/home/dev/.local/bin/mise activate fish | source' >> /home/dev/.config/fish/config.fish && \
+    echo 'starship init fish | source' >> /home/dev/.config/fish/config.fish
 
 # Configure mise to trust all config files by default
 RUN /home/dev/.local/bin/mise settings set trusted_config_paths '**'
@@ -72,7 +73,8 @@ RUN /home/dev/.local/bin/mise trust /home/dev/.config/mise/config.toml && \
     claude@latest \
     k9s@latest \
     kubectl@latest \
-    opencode@latest && \
+    opencode@latest \
+    starship@latest && \
     /home/dev/.local/bin/mise reshim
 
 # Install Go packages using mise exec to ensure proper environment
