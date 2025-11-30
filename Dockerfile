@@ -74,11 +74,12 @@ RUN /home/dev/.local/bin/mise trust /home/dev/.config/mise/config.toml && \
     claude@latest \
     k9s@latest \
     kubectl@latest \
-    opencode@latest \
+    ubi:sst/opencode@latest \
     starship@latest \
     atuin@latest \
     lazygit@latest \
-    lazydocker@latest && \
+    lazydocker@latest \
+    gh@latest && \
     /home/dev/.local/bin/mise reshim
 
 # Install Go packages using mise exec to ensure proper environment
