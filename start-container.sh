@@ -52,6 +52,7 @@ else
     -v ~/.local/share/vibe-kanban:/home/dev/.local/share/vibe-kanban \
     -v ~/.local/share/k9s/:/home/dev/.local/share/k9s/ \
     -v ~/.local/share/opencode/:/home/dev/.local/share/opencode/ \
+    -v ~/.local/share/atuin/:/home/dev/.local/share/atuin/ \
     -v ~/repos/development-environment/config/claude-code-ui/auth.db:/home/dev/claudecodeui/server/database/auth.db \
     -d "$IMAGE_NAME" sleep infinity
   

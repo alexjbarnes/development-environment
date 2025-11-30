@@ -42,7 +42,8 @@ RUN echo 'set -gx PATH "/home/dev/.local/share/mise/shims" "/home/dev/.local/bin
     echo 'set -gx MISE_CONFIG_DIR "/home/dev/.config/mise"' >> /home/dev/.config/fish/config.fish && \
     echo 'set -gx MISE_CACHE_DIR "/home/dev/.cache/mise"' >> /home/dev/.config/fish/config.fish && \
     echo '/home/dev/.local/bin/mise activate fish | source' >> /home/dev/.config/fish/config.fish && \
-    echo 'starship init fish | source' >> /home/dev/.config/fish/config.fish
+    echo 'starship init fish | source' >> /home/dev/.config/fish/config.fish && \
+    echo 'atuin init fish | source' >> /home/dev/.config/fish/config.fish
 
 # Configure mise to trust all config files by default
 RUN /home/dev/.local/bin/mise settings set trusted_config_paths '**'
@@ -74,7 +75,10 @@ RUN /home/dev/.local/bin/mise trust /home/dev/.config/mise/config.toml && \
     k9s@latest \
     kubectl@latest \
     opencode@latest \
-    starship@latest && \
+    starship@latest \
+    atuin@latest \
+    lazygit@latest \
+    lazydocker@latest && \
     /home/dev/.local/bin/mise reshim
 
 # Install Go packages using mise exec to ensure proper environment
